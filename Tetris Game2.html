@@ -1,0 +1,43 @@
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Tetris - HTML 5 </title>
+<link rel="stylesheet" href="TetrisStyle.css">
+
+</head>
+
+<body>
+
+<div id="title_container">
+<p style="color: #ffffff;">Tetris Title Here</p>
+</div>
+
+<div id="canvas_container">
+<canvas width="300" height="600"></canvas>
+<script src="js\Tetris.js"></script>
+<script src="js\UserInput.js"></script>
+<script src="js\BoardRender.js"></script>
+</div>
+
+<div id="stat_board">
+<label style="color: #ffffff;" class="score_label">Score: </label>
+<label class="score_field"></label>
+<br>
+<label style="color: #ffffff;" class="score_label">Level: </label>
+<label class="score_field"></label>
+<br>
+<label></label>
+<label></label>
+<br>
+</div>
+
+<audio autoplay loop hidden>
+  <source src="audio/tetris.mp3" type="audio/mp3">
+  
+  <embed height="50" width="100" src="audio/tetris.mp3" hidden="true" autostart="true" loop="true">
+</audio>
+
+</body>
+</html>

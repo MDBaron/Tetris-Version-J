@@ -1,0 +1,227 @@
+<html>
+<head>
+<title>Tetris - HTML 5 </title>
+<link rel="stylesheet" href="TetrisStyle.css">
+
+<script type="text\javascript">
+var COLUMN_COUNT = 10;
+var ROW_COUNT = 20;
+var board = [];
+var current;
+var currentx;
+var currenty;
+var blocks = [
+	[1,1,1,1],
+	[1,1,1,0,1],
+	[1,1,1,0,0,0,1],
+	[1,1,0,0,1,1],
+	[0,1,1,0,1,1],
+	[0,1,0,0,1,1,1],
+];
+var colors = [
+	'red','blue','yellow','green','purple','orange','black', 'white'
+];
+
+function generateBlock(){
+	var blockNum = Math.random() * blocks.length;
+	var block = blocks[blockNum];
+	current = [];
+	for(var y = 0; y < 4; y++){
+		current[y] + [];
+		for(var x = 0; x < 4; x++){
+			var i = (y + x) * 4;
+			if(typeof block[i] != 'undefined' && block[i]){
+				current[y][x] = id + 1;
+			} else {
+				current[y][x] = 0;
+			}
+		}
+	}
+	currentx = (ROW_COUNT / 2) - 2;
+	currenty = 0;
+}//generateBlock
+
+function init(){
+	for (var y = 0; y < ROW_COUNT; ++y) {
+        board[ y ][] = [][];
+        for (var x = 0; x < COLUMN_COUNT; ++x) {
+            board[ y ][ x ] = 0;
+        }
+    }
+}//init
+
+function tick(){
+	if(valid(0,1)){
+		++currenty;
+	} else {
+		freeze();
+		clearLines();
+		generateBlock();
+	}
+}//tick
+
+function freeze(){
+	for(var y = 0; y < 4; ++y){
+		for(var x = 0; x < 4; ++x ){
+			if(current[y][x]){
+				board[y + currantY][x + currentX] = current[y][x];
+				}
+		}
+	}
+}//freeze
+
+function rotate(current){
+	var newCurrant = [];
+	for(var y = 0; y < 4; ++y){
+		newCurrent[y] = [];
+		for(var x = 0; x < 4; ++x ){
+			newCurrant[y][x] = current[3 - x][y];
+		}
+	}
+	return newCurrant;
+}//rotate
+
+function clearLines(){
+	for(var y = (ROW_COUNT - 1); y >= 0; --y){
+		var row = true;
+		for(var x = 0; x < COLUMN_COUNT; ++x){
+			if(board[y][x] == 0){
+				row = false;
+				break;
+			}
+		}
+		
+		if(row){
+			for(var newY = y; newY > 0; --newY){
+				for(var x = 0; x < COLUMN_COUNT; ++x){
+					board[newY][x] = board[newY - 1][x];
+				}
+			}
+		++y	
+		}
+	}
+}//clearLines
+
+function onKeyPress(key){
+	switch(key){
+		case 'left':
+			if(valid(1)){
+				--currentx;
+			}
+			break;
+		case 'right':
+			if(valid(-1)){
+				++currenty;
+			}
+			break;
+		case 'up':
+			var rotated = rotate(current);
+			if(valid(0,0)){
+				current = rotated;
+			}
+			break;
+		case 'down':
+			if(valid(0,1)){
+				++currenty;
+			}
+			break;
+	}
+}//keyPress
+
+function valid(offX, offY, newCurrent){
+	offX = offX || 0; //evaluate first if 'offX' contains anything, type-safe to 0
+	offY = offY || 0; //same here
+	offX = currentX + offX;
+	oofY = currentY + offY;
+	newCurrent = newCurrent || current; //also, here
+	
+	for(var y = 0; y < 4; ++y){
+		for(var x = 0; x < 4; ++x){
+			if(newCurrent[y][x]){
+				if(typeof board[y + offY] == 'undefined'){
+					return false;
+				} else if(typeof board[y + offY][x + offX]) == 'undefined'{
+					return false;
+				} else if(board[y + offY][x + offX]){
+					return false;				
+				} else if(x + offX >= COLUMN_COUNT){
+					return false;
+				} else if(y + offY >+ ROW_COUNT){
+					return false;
+				} else if(x + offX < 0){
+					return false;
+				} else {
+					return true;
+				}
+			}
+		}
+	}
+	
+	
+}//valid
+
+init();
+generateBlock();
+setInterval(tick, 250);
+
+var canvas = document.getElementsByTagName('canvas')[0];
+var ctx = canvas.getContext('2d');
+var WIDTH = 300;
+var HEIGHT = 600;
+var BLOCK_WIDTH = WIDTH / COLUMN_COUNT;
+var BLOCK_HEIGHT = HEIGHT / ROW_COUNT;
+
+function drawBlock(x, y) {
+    ctx.fillRect((BLOCK_WIDTH * x), (BLOCK_HEIGHT * y), (BLOCK_WIDTH - 1), (BLOCK_HEIGHT - 1));
+    ctx.strokeRect((BLOCK_WIDTH * x), (BLOCK_HEIGHT * y), (BLOCK_WIDTH - 1), (BLOCK_HEIGHT - 1));
+}
+
+function render() {
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+    ctx.strokeStyle = 'black';
+    for (var x = 0; x < COLUMN_COUNT; ++x) {
+        for (var y = 0; y < ROW_COUNT; ++y) {
+            if(board[y][x]){
+                ctx.fillStyle = colors[board[y][x] - 1];
+                drawBlock(x, y);
+            }
+        }
+    }
+
+    ctx.fillStyle = 'red';
+    ctx.strokeStyle = 'black';
+    for (var y = 0; y < 4; ++y) {
+        for (var x = 0; x < 4; ++x) {
+            if (current[y][x]) {
+                ctx.fillStyle = colors[current[y][x] - 1];
+                drawBlock(currentX + x, currentY + y);
+            }
+        }
+    }
+}
+
+setInterval(render, 30);
+
+document.body.onkeydown = function(e){
+    var keys = {
+        37: 'left',
+        39: 'right',
+        40: 'down',
+        38: 'up'
+    };
+	
+    if(typeof keys[e.keyCode] != 'undefined'){
+        keyPress(keys[e.keyCode]);
+        render();
+    }
+};
+</script>
+
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+</body>
+</html>

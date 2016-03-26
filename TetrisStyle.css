@@ -1,0 +1,22 @@
+canvas {
+    display: block;
+    margin: auto;
+    border: 10px solid black;
+	width: 300;
+	height: 600;
+	background: rgba(255,255,255,.5);
+	border-radius: 4px 8px 4px 8px/4px 8px 4px 8px;
+}
+
+body {
+background-image: url("images/city.gif");
+background-position:center;
+background-repeat:no-repeat;
+}
+
+
+#title_container {width: 400px; float: left; display: inline; margin: auto;}
+#canvas_container {width: 400px; float: left; display: inline; margin: auto; padding-left: 65px; padding-right: 65px; padding-top: 20px;}
+#stat_board {width: 400px; float: left; display: inline; margin: auto;}
+.score_label {font-size: large;}
+.score_field {font-size: large;}
